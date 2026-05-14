@@ -12,13 +12,13 @@ jobs:
     steps:
       # 1. 깃허브 코드 가져오기
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       # 2. Node.js 설치
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: '20'
           cache: 'npm'
 
       # 3. 패키지 설치
@@ -39,4 +39,4 @@ jobs:
 
       # 6. S3 배포
       - name: Deploy to S3
-        run: aws s3 sync build/ s3://mybucket.20263599 --delete
+        run: aws s3 sync ./build s3://mybucket.20263599 --delete
