@@ -1,0 +1,41 @@
+name: React Deploy to AWS S3
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. 깃허브 코드 가져오기
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      # 2. Node.js 설치
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      # 3. 패키지 설치
+      - name: Install dependencies
+        run: npm install
+
+      # 4. React build
+      - name: Build React App
+        run: npm run build
+
+      # 5. AWS 인증
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-2
+
+      # 6. S3 배포
+      - name: Deploy to S3
+        run: aws s3 sync build/ s3://버킷이름 --delete
